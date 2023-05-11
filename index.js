@@ -12,42 +12,72 @@ const nextButton = document.querySelector('[data-js="button-next"]');
 const pagination = document.querySelector('[data-js="pagination"]');
 
 // States
-const maxPage = 1;
-const page = 1;
+let maxPage;
+let page = 1;
 const searchQuery = "";
 
-
-async function fetchCharacters() {
+async function fetchCharacters(page) {
   try {
-    const response = await fetch ("https://rickandmortyapi.com/api/character");
+    const response = await fetch(
+      `https://rickandmortyapi.com/api/character/?page=${page}`
+    );
     if (response.ok) {
       cardContainer.innerHTML = "";
-    const data = await response.json();
-    return data;
+      const data = await response.json();
+      return data;
     } else {
-      console.error("else Error")
+      console.error("else Error");
     }
-
   } catch (error) {
-    console.error("catch Error")
+    console.error("catch Error");
   }
-  
 }
 
-console.log(await fetchCharacters());
+let fetchedCharactersObject = "";
 
-const fetchedCharactersObject = await fetchCharacters();
-const fetchedCharacters = fetchedCharactersObject.results;
+async function renderCharacters(page) {
+  fetchedCharactersObject = await fetchCharacters(page);
+  maxPage = fetchedCharactersObject.info.pages;
 
-console.log(fetchedCharacters);
+  let fetchedCharacters = fetchedCharactersObject.results;
 
-const characterHTML = fetchedCharacters.map((character) => {
-  const characterCard = createCharacterCard(character.name, character.status, character.type, character.episode.length, character.image)
-  return characterCard
+  const characterHTML = fetchedCharacters.map((character) => {
+    const characterCard = createCharacterCard(
+      character.name,
+      character.status,
+      character.type,
+      character.episode.length,
+      character.image
+    );
+    return characterCard;
+  });
 
+  cardContainer.innerHTML = characterHTML;
+}
+await renderCharacters();
+
+let pageIndex = page;
+nextButton.addEventListener("click", async (event) => {
+  pageIndex++;
+  pagination.innerHTML = pageIndex + " / " + maxPage;
+  console.log("pageIndex:", pageIndex);
+  if (pageIndex === maxPage) {
+    nextButton.disabled = true;
+  }
+  prevButton.disabled = false;
+  await renderCharacters(pageIndex);
 });
 
-console.log(characterHTML);
-cardContainer.innerHTML = characterHTML
+prevButton.disabled = true;
+prevButton.addEventListener("click", async (event) => {
+  pageIndex--;
+  pagination.innerHTML = pageIndex + " / " + maxPage;
+  nextButton.disabled = false;
+  console.log("pageIndex:", pageIndex);
+  if (pageIndex === 1) {
+    prevButton.disabled = true;
+  }
+  await renderCharacters(pageIndex);
+});
 
-
+pagination.innerHTML = "1 / " + maxPage;
