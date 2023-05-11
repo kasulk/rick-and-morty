@@ -14,7 +14,7 @@ const pagination = document.querySelector('[data-js="pagination"]');
 // States
 let maxPage;
 let page = 1;
-const searchQuery = "";
+let searchQuery = "";
 
 async function fetchCharacters(page) {
   try {
@@ -81,3 +81,11 @@ prevButton.addEventListener("click", async (event) => {
 });
 
 pagination.innerHTML = "1 / " + maxPage;
+
+//search bar 
+searchBar.addEventListener("submit", (event) => {
+  event.preventDefault();
+  searchQuery = event.target.query.value;
+  console.log(event.target.query.value);
+})
+
