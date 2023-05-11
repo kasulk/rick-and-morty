@@ -16,6 +16,7 @@ let maxPage;
 let page = 1;
 let searchQuery = "";
 
+//fetch data 
 async function fetchCharacters(page, searchQuery) {
   try {
     const response = await fetch(
@@ -33,6 +34,7 @@ async function fetchCharacters(page, searchQuery) {
   }
 }
 
+// function to render the characters
 let fetchedCharactersObject = "";
 
 async function renderCharacters(page, searchQuery) {
@@ -54,9 +56,11 @@ async function renderCharacters(page, searchQuery) {
 
   cardContainer.innerHTML = characterHTML;
 }
+//initial render cards
 await renderCharacters(page, searchQuery);
 
 let pageIndex = page;
+//next Button 
 nextButton.addEventListener("click", async (event) => {
   pageIndex++;
   pagination.innerHTML = pageIndex + " / " + maxPage;
@@ -65,9 +69,10 @@ nextButton.addEventListener("click", async (event) => {
     nextButton.disabled = true;
   }
   prevButton.disabled = false;
-  await renderCharacters(pageIndex);
+  await renderCharacters(pageIndex, searchQuery);
 });
 
+//prev Button
 prevButton.disabled = true;
 prevButton.addEventListener("click", async (event) => {
   pageIndex--;
@@ -77,17 +82,28 @@ prevButton.addEventListener("click", async (event) => {
   if (pageIndex === 1) {
     prevButton.disabled = true;
   }
-  await renderCharacters(pageIndex);
+  await renderCharacters(pageIndex, searchQuery);
 });
 
-pagination.innerHTML = "1 / " + maxPage;
+//initial render page numbers
+pagination.innerHTML = page + " / " + maxPage;
 
 //search bar 
 searchBar.addEventListener("submit", async(event) => {
   event.preventDefault();
+  nextButton.disabled = false;
   searchQuery = event.target.query.value;
   console.log(event.target.query.value);
   await renderCharacters(page, searchQuery);
+  console.log(maxPage);
+  pagination.innerHTML = page + " / " + maxPage;
+  if (maxPage === 1){
+    nextButton.disabled = true;
+  }
+  //try to empty cardContainer when searchQuery not found
+  if (!searchQuery) {
+    cardContainer.innerHTML = "";
+  };
 
 })
 
