@@ -12,7 +12,7 @@ const nextButton = document.querySelector('[data-js="button-next"]');
 const pagination = document.querySelector('[data-js="pagination"]');
 
 // States
-const maxPage = 1;
+let maxPage;
 let page = 1;
 const searchQuery = "";
 
@@ -33,15 +33,13 @@ async function fetchCharacters(page) {
   }
 }
 
-// console.log(await fetchCharacters());
-
 let fetchedCharactersObject = "";
 
 async function renderCharacters(page) {
   fetchedCharactersObject = await fetchCharacters(page);
-  let fetchedCharacters = fetchedCharactersObject.results;
+  maxPage = fetchedCharactersObject.info.pages;
 
-  // console.log(fetchedCharacters);
+  let fetchedCharacters = fetchedCharactersObject.results;
 
   const characterHTML = fetchedCharacters.map((character) => {
     const characterCard = createCharacterCard(
@@ -54,53 +52,32 @@ async function renderCharacters(page) {
     return characterCard;
   });
 
-  // console.log(characterHTML);
   cardContainer.innerHTML = characterHTML;
-
-  // return fetchedCharactersObject;
 }
 await renderCharacters();
 
-// testPageFetch
-const testPageFetchData = async function testPageFetch() {
-  return (
-    await fetch(`https://rickandmortyapi.com/api/character/?page=${page}`)
-  ).json();
-};
-// console.log("testFetch:", await testPageFetchData());
-
 let pageIndex = page;
-// Add an event listener on each of the next and prev buttons which do the following
 nextButton.addEventListener("click", async (event) => {
-  // it is prevented that the page index could go higher than the max page index or below 1
   pageIndex++;
-  pagination.innerHTML = pageIndex + " / " + fetchedCharactersObject.info.pages;
+  pagination.innerHTML = pageIndex + " / " + maxPage;
   console.log("pageIndex:", pageIndex);
-  if (pageIndex === fetchedCharactersObject.info.pages) {
+  if (pageIndex === maxPage) {
     nextButton.disabled = true;
   }
   prevButton.disabled = false;
-
-  // await fetchCharacters(5);
-  // console.log("fetchCharacters:", await fetchCharacters(6));
   await renderCharacters(pageIndex);
-  // console.log("renderCharacters(5):", await renderCharacters(5));
 });
 
+prevButton.disabled = true;
 prevButton.addEventListener("click", async (event) => {
-  // it is prevented that the page index could go higher than the max page index or below 1
   pageIndex--;
-  pagination.innerHTML = pageIndex + " / " + fetchedCharactersObject.info.pages;
+  pagination.innerHTML = pageIndex + " / " + maxPage;
+  nextButton.disabled = false;
   console.log("pageIndex:", pageIndex);
   if (pageIndex === 1) {
     prevButton.disabled = true;
   }
-  nextButton.disabled = false;
-
   await renderCharacters(pageIndex);
 });
 
-// the page index is increased / decreased
-// the fetchCharacters function is called
-
-pagination.innerHTML = "1 / " + fetchedCharactersObject.info.pages;
+pagination.innerHTML = "1 / " + maxPage;
