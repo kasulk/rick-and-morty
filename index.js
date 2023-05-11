@@ -30,3 +30,21 @@ cardContainer.innerHTML = createCharacterCard(
   occurences,
   src
 );
+
+async function fetchCharacters() {
+  try {
+    const response = await fetch ("https://rickandmortyapi.com/api");
+    if (response.ok) {
+    const data = await response.json();
+    return data;
+    } else {
+      console.error("else Error")
+    }
+
+  } catch (error) {
+    console.error("catch Error")
+  }
+  
+}
+//
+console.log(await fetchCharacters());
