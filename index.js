@@ -98,7 +98,8 @@ searchBar.addEventListener("submit", async (event) => {
 
   console.log("maxPage:", maxPage);
   pagination.innerHTML = page + " / " + maxPage;
-  // if (maxPage === 1){
+
+  // if (maxPage === 1) {
   //   nextButton.disabled = true;
   // }
 
