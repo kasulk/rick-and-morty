@@ -98,9 +98,9 @@ searchBar.addEventListener("submit", async (event) => {
 
   console.log("maxPage:", maxPage);
   pagination.innerHTML = page + " / " + maxPage;
-  // if (maxPage === 1){
-  //   nextButton.disabled = true;
-  // }
+  if (maxPage === 1) {
+    nextButton.disabled = true;
+  }
 
   //try to empty cardContainer when searchQuery not found
   // if (!searchQuery) {
