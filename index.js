@@ -62,26 +62,25 @@ await renderCharacters(page, searchQuery);
 let pageIndex = page;
 //next Button 
 nextButton.addEventListener("click", async (event) => {
+  // console.log("pageIndex:", pageIndex);
+  if (pageIndex === maxPage) {
+    return
+  }
   pageIndex++;
   pagination.innerHTML = pageIndex + " / " + maxPage;
-  console.log("pageIndex:", pageIndex);
-  if (pageIndex === maxPage) {
-    nextButton.disabled = true;
-  }
-  prevButton.disabled = false;
+
   await renderCharacters(pageIndex, searchQuery);
 });
 
 //prev Button
-prevButton.disabled = true;
 prevButton.addEventListener("click", async (event) => {
+  // console.log("pageIndex:", pageIndex);
+  if (pageIndex === 1) {
+    return
+  }
   pageIndex--;
   pagination.innerHTML = pageIndex + " / " + maxPage;
-  nextButton.disabled = false;
-  console.log("pageIndex:", pageIndex);
-  if (pageIndex === 1) {
-    prevButton.disabled = true;
-  }
+
   await renderCharacters(pageIndex, searchQuery);
 });
 
@@ -91,11 +90,13 @@ pagination.innerHTML = page + " / " + maxPage;
 //search bar 
 searchBar.addEventListener("submit", async(event) => {
   event.preventDefault();
-  nextButton.disabled = false;
+
   searchQuery = event.target.query.value;
-  console.log(event.target.query.value);
+  console.log('searchQuery:',searchQuery)
+  
   await renderCharacters(page, searchQuery);
-  console.log(maxPage);
+  
+  console.log('maxPage:',maxPage);
   pagination.innerHTML = page + " / " + maxPage;
   if (maxPage === 1){
     nextButton.disabled = true;
