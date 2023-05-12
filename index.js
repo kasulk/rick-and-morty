@@ -16,7 +16,7 @@ let maxPage;
 let page = 1;
 let searchQuery = "";
 
-//fetch data 
+//fetch data
 async function fetchCharacters(page, searchQuery) {
   try {
     const response = await fetch(
@@ -60,50 +60,50 @@ async function renderCharacters(page, searchQuery) {
 await renderCharacters(page, searchQuery);
 
 let pageIndex = page;
-//next Button 
-nextButton.addEventListener("click", async (event) => {
+//next Button
+nextButton.addEventListener("click", async () => {
+  // console.log("pageIndex:", pageIndex);
+  if (pageIndex === maxPage) {
+    return;
+  }
   pageIndex++;
   pagination.innerHTML = pageIndex + " / " + maxPage;
-  console.log("pageIndex:", pageIndex);
-  if (pageIndex === maxPage) {
-    nextButton.disabled = true;
-  }
-  prevButton.disabled = false;
+
   await renderCharacters(pageIndex, searchQuery);
 });
 
 //prev Button
-prevButton.disabled = true;
-prevButton.addEventListener("click", async (event) => {
+prevButton.addEventListener("click", async () => {
+  // console.log("pageIndex:", pageIndex);
+  if (pageIndex === 1) {
+    return;
+  }
   pageIndex--;
   pagination.innerHTML = pageIndex + " / " + maxPage;
-  nextButton.disabled = false;
-  console.log("pageIndex:", pageIndex);
-  if (pageIndex === 1) {
-    prevButton.disabled = true;
-  }
+
   await renderCharacters(pageIndex, searchQuery);
 });
 
 //initial render page numbers
 pagination.innerHTML = page + " / " + maxPage;
 
-//search bar 
-searchBar.addEventListener("submit", async(event) => {
+//search bar
+searchBar.addEventListener("submit", async (event) => {
   event.preventDefault();
-  nextButton.disabled = false;
+
   searchQuery = event.target.query.value;
-  console.log(event.target.query.value);
+  console.log("searchQuery:", searchQuery);
+
   await renderCharacters(page, searchQuery);
-  console.log(maxPage);
+
+  console.log("maxPage:", maxPage);
   pagination.innerHTML = page + " / " + maxPage;
-  if (maxPage === 1){
-    nextButton.disabled = true;
-  }
+
+  // if (maxPage === 1) {
+  //   nextButton.disabled = true;
+  // }
   //try to empty cardContainer when searchQuery not found
-  if (!searchQuery) {
-    cardContainer.innerHTML = "";
-  };
-
-})
-
+  // if (!searchQuery) {
+  //   cardContainer.innerHTML = "";
+  // };
+});
