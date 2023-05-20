@@ -34,9 +34,9 @@ async function fetchCharacters(page, searchQuery) {
   }
 }
 
-// function to render the characters
 let fetchedCharactersObject = "";
 
+// function to render the characters
 async function renderCharacters(page, searchQuery) {
   fetchedCharactersObject = await fetchCharacters(page, searchQuery);
   maxPage = fetchedCharactersObject.info.pages;
@@ -99,11 +99,5 @@ searchBar.addEventListener("submit", async (event) => {
   console.log("maxPage:", maxPage);
   pagination.innerHTML = page + " / " + maxPage;
 
-  // if (maxPage === 1) {
-  //   nextButton.disabled = true;
-  // }
-  //try to empty cardContainer when searchQuery not found
-  // if (!searchQuery) {
-  //   cardContainer.innerHTML = "";
-  // };
+  pageIndex = 1;
 });
